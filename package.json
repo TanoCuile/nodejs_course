@@ -1,0 +1,25 @@
+{
+  "name": "lesson_0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "yargs": "^16.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanoCuile/nodejs_course.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TanoCuile/nodejs_course/issues"
+  },
+  "homepage": "https://github.com/TanoCuile/nodejs_course#readme"
+}
