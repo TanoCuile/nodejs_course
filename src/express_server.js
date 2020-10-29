@@ -10,7 +10,7 @@ function handleUserInfo() {
 
 // request -> system_functions -> express_router -> [m1, m2, m3 ..., mn] -> handler
 
-
+express().listen();
 function runServer({ host, port }) {
   return new Promise((resolve) => {
     const app = express();
