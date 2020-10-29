@@ -1,5 +1,5 @@
 const yargs = require("yargs");
-const { runServer } = require("./src/server");
+const { runServer } = require("./src/express_server");
 
 const parameters = yargs
   .scriptName("run")
@@ -8,6 +8,7 @@ const parameters = yargs
     "run [host] [port]",
     "Run server",
     (command) => {
+      // command.option('option', {}) // --key=value
       command.positional("host", {
         default: "localhost",
         description: "Host for running server",
