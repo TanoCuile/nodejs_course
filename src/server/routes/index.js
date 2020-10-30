@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs/promises');
+const {PATH_TO_DATA_FILE} = require('../../config');
 
 function handleUserInfo() {
   console.log('Handle...');
@@ -12,7 +13,7 @@ function handleUserInfo() {
  */
 function handleUsersPost(req, res) {
   /**
-   * @type {{users: {name: string, id: number}[]}}
+   * @type {UsersRequestPayload}
    */
   const newUserInfo = req.body;
 
@@ -35,11 +36,7 @@ function handleUsersPost(req, res) {
 async function handleUsersGet(res) {
   return res.json({
     status: 'Ok',
-    data: JSON.parse(
-      (
-        await fs.readFile(path.join(process.cwd(), 'data', 'data.json'))
-      ).toString()
-    ),
+    data: JSON.parse((await fs.readFile(PATH_TO_DATA_FILE)).toString()),
   });
 }
 
@@ -57,3 +54,10 @@ function settUpRoutes(app) {
 }
 
 module.exports = {settUpRoutes};
+
+/**
+ * @typedef {{users: {
+ *      name: string;
+ *      id: number;}[];
+ * }} UsersRequestPayload
+ */
