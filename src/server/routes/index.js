@@ -1,11 +1,6 @@
-const path = require('path');
-const fs = require('fs/promises');
-const {PATH_TO_DATA_FILE} = require('../../config');
-
-function handleUserInfo() {
-  console.log('Handle...');
-  return Promise.resolve();
-}
+const { promises: fs } = require('fs');
+const { handleUserInfo } = require('../handle.users_info');
+const { PATH_TO_DATA_FILE } = require('../../config');
 
 /**
  * @param {import('express').Request} req
@@ -44,16 +39,12 @@ async function handleUsersGet(res) {
  * @param {import('express').Application} app
  */
 function settUpRoutes(app) {
-  app.post('/users', (req, res) => {
-    return handleUsersPost(req, res);
-  });
+  app.post('/users', (req, res) => handleUsersPost(req, res));
 
-  app.get('/users', (req, res) => {
-    return handleUsersGet(res);
-  });
+  app.get('/users', (req, res) => handleUsersGet(res));
 }
 
-module.exports = {settUpRoutes};
+module.exports = { settUpRoutes };
 
 /**
  * @typedef {{users: {

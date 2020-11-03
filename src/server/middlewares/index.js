@@ -10,6 +10,7 @@ function validateUserRequestMiddleware(req, res, next) {
     return next();
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const user of req.body.users) {
     if (typeof user.id !== 'number') {
       return next(new Error());

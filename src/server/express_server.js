@@ -1,6 +1,6 @@
 const express = require('express');
-const {setUpMiddlewares} = require('./middlewares');
-const {settUpRoutes} = require('./routes');
+const { setUpMiddlewares } = require('./middlewares');
+const { settUpRoutes } = require('./routes');
 
 /**
  * @param {import('express').Application} app
@@ -15,7 +15,7 @@ function setUpExpressApplication(app) {
 
 // express().listen();
 
-function runServer({host, port}) {
+function runServer({ host, port }) {
   return new Promise((resolve) => {
     const app = express();
 
@@ -29,5 +29,5 @@ function runServer({host, port}) {
 }
 
 module.exports = {
-  runServer: runServer,
+  runServer,
 };
