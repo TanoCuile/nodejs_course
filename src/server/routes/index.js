@@ -3,6 +3,10 @@ const { PATH_TO_INDEX } = require('../../config');
 const { handleUsersPost } = require('./handleUserPost');
 const { handleUsersGet } = require('./handleUsersGet');
 
+// http://192.188.211.34/ -> Even your address
+// http://blah.foo.com -> 192.188.211.34  -> DNS
+// World domain refresh delay 1-2days
+
 /**
  * @param {import('express').Application} app
  */
