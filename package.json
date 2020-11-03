@@ -18,7 +18,7 @@
     "nodemon": "^2.0.6"
   },
   "scripts": {
-    "start": "node ./index.js run localhost 80",
+    "start": "node ./index.js run localhost 3000",
     "start:local": "nodemon --inspect ./index.js run localhost 3000",
     "lint": "eslint ./src/*",
     "test": "echo \"Error: no test specified\" && exit 1"
