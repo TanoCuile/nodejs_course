@@ -14,7 +14,7 @@ const hostParameterConfiguration = {
 const portParameterConfigurtion = {
   description: 'Port for running server',
   type: 'number',
-  default: 3000,
+  default: process.env.PORT,
 };
 const HOST_PARAMETER_NAME = 'host';
 const PORT_PARAMETER_NAME = 'port';
