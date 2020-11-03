@@ -11,11 +11,13 @@ const hostParameterConfiguration = {
   description: 'Host for running server',
   type: 'string',
 };
+
 const portParameterConfigurtion = {
   description: 'Port for running server',
   type: 'number',
   default: process.env.PORT,
 };
+
 const HOST_PARAMETER_NAME = 'host';
 const PORT_PARAMETER_NAME = 'port';
 const PATH_TO_DATA_FILE = path.join(process.cwd(), 'data', 'data.json');

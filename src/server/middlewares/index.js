@@ -1,4 +1,4 @@
-const jsonBodyParser = require('json-body-parser');
+const express = require('express');
 
 /**
  * @param {import('express').Request} req
@@ -10,11 +10,8 @@ function validateUserRequestMiddleware(req, res, next) {
     return next();
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const user of req.body.users) {
-    if (typeof user.id !== 'number') {
-      return next(new Error());
-    }
+  if (req.body && req.body.user.id && typeof req.body.user.id !== 'number') {
+    return next(new Error());
   }
 
   return next();
@@ -24,7 +21,7 @@ function validateUserRequestMiddleware(req, res, next) {
  * @param {import('express').Application} app
  */
 function setUpMiddlewares(app) {
-  app.use(jsonBodyParser);
+  app.use(express.json());
 
   app.use('/users', validateUserRequestMiddleware);
 }

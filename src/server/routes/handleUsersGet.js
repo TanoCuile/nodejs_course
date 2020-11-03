@@ -1,5 +1,4 @@
-const { promises: fs } = require('fs');
-const { PATH_TO_DATA_FILE } = require('../../config');
+const { getUsers } = require('../handle.users_info');
 
 /**
  * @param {import('express').Response} res
@@ -7,7 +6,7 @@ const { PATH_TO_DATA_FILE } = require('../../config');
 async function handleUsersGet(res) {
   return res.json({
     status: 'Ok',
-    data: JSON.parse((await fs.readFile(PATH_TO_DATA_FILE)).toString()),
+    data: await getUsers(),
   });
 }
 
