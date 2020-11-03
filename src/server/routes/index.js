@@ -1,44 +1,22 @@
-const { promises: fs } = require('fs');
-const { handleUserInfo } = require('../handle.users_info');
-const { PATH_TO_DATA_FILE } = require('../../config');
-
-/**
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- */
-function handleUsersPost(req, res) {
-  /**
-   * @type {UsersRequestPayload}
-   */
-  const newUserInfo = req.body;
-
-  handleUserInfo(newUserInfo);
-
-  return res.json({
-    status: 'Ok',
-    data: [
-      {
-        name: 'Ben',
-        id: 1,
-      },
-    ],
-  });
-}
-
-/**
- * @param {import('express').Response} res
- */
-async function handleUsersGet(res) {
-  return res.json({
-    status: 'Ok',
-    data: JSON.parse((await fs.readFile(PATH_TO_DATA_FILE)).toString()),
-  });
-}
+const fs = require('fs');
+const { PATH_TO_INDEX } = require('../../config');
+const { handleUsersPost } = require('./handleUserPost');
+const { handleUsersGet } = require('./handleUsersGet');
 
 /**
  * @param {import('express').Application} app
  */
 function settUpRoutes(app) {
+  app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+
+    // Simulation of `pipe`
+    return fs.createReadStream(PATH_TO_INDEX)
+      .on('data', res.send.bind(res))
+      // .on('end', res.end); Don't do this, invalid context
+      .on('end', res.end.bind(res));
+  });
+
   app.post('/users', (req, res) => handleUsersPost(req, res));
 
   app.get('/users', (req, res) => handleUsersGet(res));

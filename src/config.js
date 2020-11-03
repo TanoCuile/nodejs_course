@@ -19,8 +19,12 @@ const portParameterConfigurtion = {
 const HOST_PARAMETER_NAME = 'host';
 const PORT_PARAMETER_NAME = 'port';
 const PATH_TO_DATA_FILE = path.join(process.cwd(), 'data', 'data.json');
+// Can be reusable, so create separated var
+const PATH_TO_PUBLIC_FOLDER = path.join(process.cwd(), 'public');
+const PATH_TO_INDEX = path.join(PATH_TO_PUBLIC_FOLDER, 'index.html');
 
 module.exports = {
+  PATH_TO_INDEX,
   hostParameterConfiguration,
   portParameterConfigurtion,
   HOST_PARAMETER_NAME,

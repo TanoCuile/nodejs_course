@@ -1,7 +1,7 @@
 // Імпортуємо функцію для зчитування команди введеної користувачем
-const {runUserCommand} = require('./src/commandProcessor');
+const { runUserCommand } = require('./src/commandProcessor');
 // Імпортуємо функцію, яка запустить сервер
-const {runServer} = require('./src/server/express_server');
+const { runServer } = require('./src/server/express_server');
 
 /**
  * Ініціалізуємо функцію, яка може зродити додаткові перетворення, або вивести необхудну інйормацію
