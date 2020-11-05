@@ -1,4 +1,4 @@
-const { handleUserInfo } = require('../handle.users_info');
+const { handleUserInfo } = require('../../handle.users_info');
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res

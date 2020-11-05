@@ -1,4 +1,7 @@
 const express = require('express');
+const { join } = require('path');
+const cors = require('cors');
+const ejs = require('ejs');
 const { setUpMiddlewares } = require('./middlewares');
 const { settUpRoutes } = require('./routes');
 
@@ -6,6 +9,10 @@ const { settUpRoutes } = require('./routes');
  * @param {import('express').Application} app
  */
 function setUpExpressApplication(app) {
+  app.use(cors());
+  app.set('views', join(process.cwd(), 'src', 'views'));
+  app.engine('ejs', ejs.renderFile);
+
   setUpMiddlewares(app);
 
   settUpRoutes(app);

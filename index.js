@@ -1,3 +1,5 @@
+// Debug packages require('debug')
+process.env.DEBUG = '*';
 // Імпортуємо функцію для зчитування команди введеної користувачем
 const { runUserCommand } = require('./src/commandProcessor');
 // Імпортуємо функцію, яка запустить сервер

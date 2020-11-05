@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.21.0",
     "cors": "^2.8.5",
+    "debug": "^4.2.0",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "json-body-parser": "^1.0.2",
     "lodash": "^4.17.20",

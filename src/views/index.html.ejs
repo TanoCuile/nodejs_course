@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <h1>Hello EJS <%= name %></h1>
+    <h2>Here our customers</h2>
+    <ul>
+      <% for(const user of users) { %>
+        <li><%= user.name %></li>
+      <% } %>
+    </ul>
+  </body>
+</html>
