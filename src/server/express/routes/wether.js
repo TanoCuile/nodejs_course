@@ -1,5 +1,5 @@
 const express = require('express');
-const { loadCurrentWetherForPosition } = require('../wether.loader');
+const { loadCurrentWetherForPosition } = require('@services/wether.loader');
 
 async function loadWether(bag, res) {
   const requestedPosition = {

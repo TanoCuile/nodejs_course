@@ -1,3 +1,9 @@
 {
-    "compilerOptions": {}
+  "compilerOptions": {
+    "paths": {
+      "@services": ["./src/services"],
+      "@routes": ["./src/server/express/routes"],
+      "@middlewares": ["./src/server/express/middlewares"]
+    }
+  }
 }

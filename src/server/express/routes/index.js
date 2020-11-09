@@ -1,10 +1,9 @@
 const express = require('express');
 const debug = require('debug')('app:routers:logs');
-const { getUsers } = require('../handle.users_info');
-const { usersCRUD } = require('./users/usersCRUD');
+const { getUsers } = require('@services/handle.users_info');
+const { usersCRUD } = require('@routes/users');
 
-const { loadCurrentWetherForPosition } = require('../wether.loader');
-const { initializeWetherRoutes } = require('./initializeWetherRoutes');
+const { initializeWetherRoutes } = require('@routes/wether');
 
 function initializeAPI(app) {
   /**

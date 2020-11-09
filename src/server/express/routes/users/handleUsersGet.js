@@ -1,4 +1,4 @@
-const { getUsers } = require('../../handle.users_info');
+const { getUsers } = require('@services/handle.users_info');
 
 /**
  * @param {import('express').Response} res

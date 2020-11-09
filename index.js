@@ -1,9 +1,12 @@
 // Debug packages require('debug')
 process.env.DEBUG = '*';
+// Реєструємо синоніми для шляхів модулів проекту
+// детальніше: https://www.npmjs.com/package/module-alias#usage
+require('module-alias/register');
 // Імпортуємо функцію для зчитування команди введеної користувачем
 const { runUserCommand } = require('./src/commandProcessor');
 // Імпортуємо функцію, яка запустить сервер
-const { runServer } = require('./src/server/express_server');
+const { runServer } = require('./src/server/express');
 
 /**
  * Ініціалізуємо функцію, яка може зродити додаткові перетворення, або вивести необхудну інйормацію

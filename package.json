@@ -11,6 +11,7 @@
     "express": "^4.17.1",
     "json-body-parser": "^1.0.2",
     "lodash": "^4.17.20",
+    "module-alias": "^2.2.2",
     "yargs": "^16.0.0"
   },
   "devDependencies": {
@@ -20,6 +21,12 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "nodemon": "^2.0.6"
+  },
+  "_moduleAliases": {
+    "@services": "./src/services",
+    "@routes": "./src/server/express/routes",
+    "@middlewares": "./src/server/express/middlewares",
+    "@": "./"
   },
   "scripts": {
     "start": "node ./index.js run 0.0.0.0",

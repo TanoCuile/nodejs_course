@@ -1,6 +1,6 @@
 // Підключаємо пакет `http` системний пакет NodeJs для роботи змережею
 const http = require('http');
-const { handleUserInfo } = require('./handle.users_info');
+const { handleUserInfo } = require('@services/handle.users_info');
 
 /**
  * Оголошуємо функцію для відправки відповіді
@@ -63,7 +63,7 @@ function requestListener(req, res) {
       // Якщо є "usersString" - нам потрібно його опрацювати
       if (usersString) {
         /**
-         * @type {import('./handle.users_info').HandleUsersPayload}
+         * @type {import('../../services/handle.users_info').HandleUsersPayload}
          */
         const users = JSON.parse(usersString);
         // Відправляємо дані запиту на подальше опрацювання
