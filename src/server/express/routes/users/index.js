@@ -1,7 +1,7 @@
-const {handleUsersPost} = require('./handleUserPost');
-const {handleUsersGet} = require('./handleUsersGet');
-const {handleSingleUserGet} = require('./handleSingleUserGet');
-const {handleUserPut} = require('./handleUserPut');
+const { handleUsersPost } = require('./handleUserPost');
+const { handleUsersGet } = require('./handleUsersGet');
+const { handleSingleUserGet } = require('./handleSingleUserGet');
+const { handleUserPut } = require('./handleUserPut');
 
 // http://192.188.211.34/ -> Even your address
 // http://blah.foo.com -> 192.188.211.34  -> DNS
@@ -11,7 +11,10 @@ const {handleUserPut} = require('./handleUserPut');
  */
 function usersCRUD(app) {
   // Create
-  app.post('/', (req, res) => handleUsersPost(req, res));
+  app.post('/', (req, res) => {
+    console.log('>>>>>');
+    return handleUsersPost(req, res);
+  });
 
   // Read list
   app.get('/', (req, res) => handleUsersGet(res));
@@ -24,7 +27,7 @@ function usersCRUD(app) {
 
   // Delete
   app.delete('/:id', (req, res) => {
-    res.json({status: 'OK'});
+    res.json({ status: 'OK' });
   });
 }
 exports.usersCRUD = usersCRUD;

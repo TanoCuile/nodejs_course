@@ -1,9 +1,19 @@
 const express = require('express');
-const {join} = require('path');
+const { join } = require('path');
 const cors = require('cors');
 const ejs = require('ejs');
-const {setUpMiddlewares} = require('@middlewares');
-const {settUpRoutes} = require('@routes');
+const { promisify } = require('util');
+
+const { setUpMiddlewares } = require('@middlewares');
+const { settUpRoutes } = require('@routes');
+const { initializeDataBase } = require('../../models');
+
+function addJSStatic(app) {
+  const pathToJS = join(process.cwd(), 'public', 'js');
+  // Наступним ми оголошуємо:
+  // за шляхом з префіксом: '/js' - дивись в папку: pathToJS
+  app.use('/js', express.static(pathToJS));
+}
 
 /**
  * Конфігуруємо сервер
@@ -15,11 +25,14 @@ function setUpExpressApplication(app) {
   app.set('views', join(process.cwd(), 'src', 'views'));
   app.engine('ejs', ejs.renderFile);
   // Додаємо іконку нашого сайту, щоб браузер краще його показував
-  app.use('/favicon.ico', express.static(join(process.cwd(), 'public', '/favicon.ico')));
+  app.use(
+    '/favicon.ico',
+    express.static(join(process.cwd(), 'public', '/favicon.ico')),
+  );
   // Додаємо синонім для доступу до css файлів
   app.use('/css', express.static(join(process.cwd(), 'public', 'css')));
   // Додаємо синонім для доступу до js файлів (щоб виконувались в браузері)
-  app.use('/js', express.static(join(process.cwd(), 'public', 'js')));
+  addJSStatic(app);
 
   // Ініціалізуємо основні middlewares (проміжний обробники запитів)
   setUpMiddlewares(app);
@@ -36,19 +49,18 @@ function setUpExpressApplication(app) {
 // handler - кінцевий обробник який підпадає під express_router
 
 // Функція для запуску сервера (вхідна точка запуску express сервера)
-function runServer({host, port}) {
-  return new Promise((resolve) => {
-    // Створюємо об*єкт express.Application для конфігурації нашого сервера
-    const app = express();
+function runServer({ host, port }) {
+  // Створюємо об*єкт express.Application для конфігурації нашого сервера
+  const app = express();
 
-    setUpExpressApplication(app);
-
+  return initializeDataBase()
+    .then(() => console.log('DB connected...'))
+    .then(() => setUpExpressApplication(app))
+    .then(() => console.log('App configured...'))
     // Запускаємо сконфігурований сервер
-    return app.listen(port, host, () => {
-      console.log('Listening...');
-      resolve();
-    });
-  });
+    .then(() => promisify(app.listen.bind(app))(port, host))
+    .then(() => console.log('Listening...'))
+    .catch((e) => console.error(e));
 }
 
 module.exports = {

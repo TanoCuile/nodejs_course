@@ -9,6 +9,7 @@ async function loadWether(bag, res) {
 
   return res.json(await loadCurrentWetherForPosition(requestedPosition));
 }
+
 /**
  * @param {import('express').Application} app
  */

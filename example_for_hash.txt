@@ -1,0 +1,11 @@
+John(uniq_fastest_to_access_index) -> Hash Func -> dhsfjskdfhkjf -> {"dhsfjskdfhkjf": [{"value": "John", "index": uniq_fastest_to_access_index}]}
+Sarah(uniq_fastest_to_access_index_2) -> Hash Func -> ueyureyurwe -> {"dhsfjskdfhkjf": [{"value": "John", "index": uniq_fastest_to_access_index}], "ueyureyurwe": [...]}
+Jack(uniq_fastest_to_access_index_3) -> Hash Func -> dhsfjskdfhkjf -> {"dhsfjskdfhkjf": [{"value": "John", "index": uniq_fastest_to_access_index}, {"value": "Jack", "index": uniq_fastest_to_access_index_3}], "ueyureyurwe": [...]}
+
+Search for "John":
+John -> Hash Func -> dhsfjskdfhkjf
+{"dhsfjskdfhkjf": [{"value": "John", "index": uniq_fastest_to_access_index}, {"value": "Jack", "index": uniq_fastest_to_access_index_3}], "ueyureyurwe": [...]}
+Result by hash:
+[{"value": "John", "index": uniq_fastest_to_access_index}, {"value": "Jack", "index": uniq_fastest_to_access_index_3}]
+Result by value:
+uniq_fastest_to_access_index

@@ -1,5 +1,6 @@
 const { promises: fs } = require('fs');
 const { PATH_TO_DATA_FILE } = require('../config');
+const { UserModel } = require('../models/user');
 
 /**
  * @returns {Promise<{users: User[]}>}
@@ -58,19 +59,9 @@ function validateUserCreation(data, user) {
  * @param {HandleUsersPayload} payload
  */
 async function handleUserInfo({ user }) {
-  /**
-   * @type {{
-   *    users: User[]
-   * }}
-   */
-  const data = await getUsers();
-
-  // Just validate
-  validateUserCreation(data, user);
-
-  data.users.push(user);
-
-  return saveDataToFile(data);
+  return UserModel.create({
+    name: user.name,
+  });
 }
 
 module.exports = {

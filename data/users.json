@@ -1,0 +1,27 @@
+[
+  {
+    "_id": "fidfkdjkfdf",
+    "name": "Vasia",
+    "travels": [
+      {
+        "city": "Abu-Dabi",
+        "date": "2020-06-15"
+      },
+      {
+        "city": "Tel Aviv",
+        "date": "2015-06-15"
+      }
+    ]
+  },
+  {
+    "_id": "fidfkdjkfdf",
+    "name": "Olia",
+    "travels": [
+      {
+        "city": "Berlin",
+        "date": "2018-06-15",
+        "comment": "Cool. I'm happy"
+      }
+    ]
+  }
+]

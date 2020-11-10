@@ -12,6 +12,7 @@
     "json-body-parser": "^1.0.2",
     "lodash": "^4.17.20",
     "module-alias": "^2.2.2",
+    "mongoose": "^5.10.13",
     "yargs": "^16.0.0"
   },
   "devDependencies": {

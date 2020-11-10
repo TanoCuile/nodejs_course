@@ -1,5 +1,5 @@
 // Debug packages require('debug')
-process.env.DEBUG = '*';
+// process.env.DEBUG = '*';
 // Реєструємо синоніми для шляхів модулів проекту
 // детальніше: https://www.npmjs.com/package/module-alias#usage
 require('module-alias/register');
