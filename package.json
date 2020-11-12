@@ -27,7 +27,7 @@
     "@services": "./src/services",
     "@routes": "./src/server/express/routes",
     "@middlewares": "./src/server/express/middlewares",
-    "@": "./"
+    "@": "./src"
   },
   "scripts": {
     "start": "node ./index.js run 0.0.0.0",

@@ -1,3 +1,4 @@
+const { deleteUserFromDB } = require('@services/handle.users_info');
 const { handleUsersPost } = require('./handleUserPost');
 const { handleUsersGet } = require('./handleUsersGet');
 const { handleSingleUserGet } = require('./handleSingleUserGet');
@@ -11,10 +12,7 @@ const { handleUserPut } = require('./handleUserPut');
  */
 function usersCRUD(app) {
   // Create
-  app.post('/', (req, res) => {
-    console.log('>>>>>');
-    return handleUsersPost(req, res);
-  });
+  app.post('/', (req, res) => handleUsersPost(req, res));
 
   // Read list
   app.get('/', (req, res) => handleUsersGet(res));
@@ -26,7 +24,8 @@ function usersCRUD(app) {
   app.put('/:id', (req, res) => handleUserPut(req, res));
 
   // Delete
-  app.delete('/:id', (req, res) => {
+  app.delete('/:id', async (req, res) => {
+    await deleteUserFromDB(req.params.id);
     res.json({ status: 'OK' });
   });
 }
