@@ -25,6 +25,15 @@ const PATH_TO_DATA_FILE = path.join(process.cwd(), 'data', 'data.json');
 const PATH_TO_PUBLIC_FOLDER = path.join(process.cwd(), 'public');
 const PATH_TO_INDEX = path.join(PATH_TO_PUBLIC_FOLDER, 'index.html');
 
+// Credentials for mongo connection
+// Here we will try to get creds from environment
+// but if it not exists - we will put default
+const MONGO_PASS = process.env.MONGO_PASS || 'goit';
+const MONGO_USER = process.env.MONGO_USER || 'course_user';
+const MONGO_DB = process.env.MONGO_DB || 'node_course';
+// Url for to mongo db
+const MONGO_DB_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@nodejscoursecluster.6lx5g.mongodb.net/${MONGO_DB}`;
+
 module.exports = {
   PATH_TO_INDEX,
   hostParameterConfiguration,
@@ -32,4 +41,5 @@ module.exports = {
   HOST_PARAMETER_NAME,
   PORT_PARAMETER_NAME,
   PATH_TO_DATA_FILE,
+  MONGO_DB_URL,
 };

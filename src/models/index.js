@@ -1,11 +1,13 @@
 const monggose = require('mongoose');
-
+const {MONGO_DB_URL} = require('@/config');
 module.exports = {
+  /**
+   * Function for initialize database connection through mongoose interface
+   */
   initializeDataBase: () =>
-  // Connect local client to Atlas database `node_course` by our credentials
-    monggose.connect('mongodb+srv://course_user:goit@nodejscoursecluster.6lx5g.mongodb.net/node_course', {
+    // Connect local client to
+    monggose.connect(MONGO_DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    })
-  ,
+    }),
 };

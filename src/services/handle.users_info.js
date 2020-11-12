@@ -59,6 +59,7 @@ function validateUserCreation(data, user) {
  * @param {HandleUsersPayload} payload
  */
 async function handleUserInfo({ user }) {
+  // By using `UserModel` interface we are adding new document to `user` collection
   return UserModel.create({
     name: user.name,
   });
