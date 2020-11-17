@@ -15,7 +15,7 @@ function usersCRUD(app) {
   app.post('/', (req, res) => handleUsersPost(req, res));
 
   // Read list
-  app.get('/', (req, res) => handleUsersGet(res));
+  app.get('/', (req, res) => handleUsersGet(req, res));
 
   // Read one item
   app.get('/:id', (req, res) => handleSingleUserGet(req, res));

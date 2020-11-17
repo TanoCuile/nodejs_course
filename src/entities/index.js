@@ -1,17 +1,18 @@
 const {getInstance} = require('./db');
 const {User} = require('./user');
 const {Car} = require('./car');
-
-module.exports.initializeDb = async function initializeBd() {
+async function initializeDataBase() {
   Car.belongsTo(User);
+  User.hasMany(Car);
   // Sync all initialized models with database
   // Bad pattern: use migrations
   // Good for development
-  await getInstance().sync({force: true}); // can drop data
-};
+  await getInstance().sync({force: false}); // can drop data
+}
+module.exports.initializeDataBase = initializeDataBase;
 
 (async () => {
-  await this.initializeDb();
+  await initializeDataBase();
   const generatedData = User.generateRandomUser();
   const storedUser = await User.create(generatedData);
 

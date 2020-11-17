@@ -1,11 +1,26 @@
-const { UserModel } = require('../models/user');
+const {User} = require('../entities/user');
+const {Car} = require('../entities/car');
 
 /**
+ * @param {number} carId
+ *
  * @returns {Promise<{users: User[]}>}
  */
-async function getUsers() {
+async function getUsers(carId) {
+  let where = {};
+  if (carId) {
+    where = {'id': carId};
+  }
   return {
-    users: await UserModel.find(),
+    users: await User.findAll({
+      include: [
+        {
+          model: Car,
+          as: 'cars',
+          where
+        },
+      ],
+    }),
   };
 }
 
@@ -15,7 +30,7 @@ async function getUsers() {
  * @returns {Promise<User>}
  */
 async function getUserById(id) {
-  return UserModel.findById(id);
+  return User.findOne({where: {id}});
 }
 
 async function updateUserById(id, userInfo) {
@@ -23,25 +38,19 @@ async function updateUserById(id, userInfo) {
     throw new Error('You cannot change user.id');
   }
 
-  // // Find document
-  // const user = await UserModel.findById(id);
-  // // Update loaded document
-  // Object.assign(user, userInfo);
-  // // Save changed doccument to DB
-  // await user.save();
-
-  await UserModel.findByIdAndUpdate(id, userInfo);
+  await User.update(userInfo, {where: {id}});
 }
 
 /**
  * @param {HandleUsersPayload} payload
  */
-async function handleUserInfo({ user }) {
+async function handleUserInfo({user}) {
   // we can add custom validation. or use model one
   // validateUserCreation();
-  // By using `UserModel` interface we are adding new document to `user` collection
-  return UserModel.create({
-    name: user.name,
+  // By using `User` interface we are adding new document to `user` collection
+  return User.create({
+    firstName: user.firstName,
+    lastName: user.lastName,
   });
 }
 
@@ -50,13 +59,17 @@ async function handleUserInfo({ user }) {
  */
 async function deleteUserFromDB(id) {
   // Easiest way to delete by ID
-  return UserModel.findByIdAndDelete(id);
+  return User.destroy({where: {id}});
   // If you need to delete by condition use: next
-  // return UserModel.deleteOne({ _id: id });
+  // return User.deleteOne({ _id: id });
 }
 
 module.exports = {
-  handleUserInfo, getUsers, getUserById, updateUserById, deleteUserFromDB,
+  handleUserInfo,
+  getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserFromDB,
 };
 
 /**
