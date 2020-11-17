@@ -13,18 +13,18 @@ module.exports.initializeDataBase = initializeDataBase;
 
 (async () => {
   await initializeDataBase();
-  const generatedData = User.generateRandomUser();
-  const storedUser = await User.create(generatedData);
+  // const generatedData = User.generateRandomUser();
+  // const storedUser = await User.create(generatedData);
 
-  console.log(storedUser.getFullName());
+  // console.log(storedUser.getFullName());
 
-  console.log(storedUser.toJSON());
+  // console.log(storedUser.toJSON());
 
-  const generatedCar = Car.generateRandomCar();
-  generatedCar.userId = storedUser.id;
-  const storedCar = await Car.create(generatedCar);
+  // const generatedCar = Car.generateRandomCar();
+  // generatedCar.userId = storedUser.id;
+  // const storedCar = await Car.create(generatedCar);
 
-  console.log(generatedCar, storedCar.getFullName());
+  // console.log(generatedCar, storedCar.getFullName());
 
-  console.log(storedCar.toJSON());
+  // console.log(storedCar.toJSON());
 })();

@@ -9,7 +9,6 @@ async function handleUsersPost(req, res) {
      * @type {UsersRequestPayload}
      */
     const newUserInfo = req.body;
-    console.log(newUserInfo);
 
     await handleUserInfo(newUserInfo);
 

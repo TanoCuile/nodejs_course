@@ -13,6 +13,7 @@ const sequelize = new Sequelize({
     max: 5,
     min: 2,
   },
+  logging: false
 });
 
 module.exports.getInstance = () => {
