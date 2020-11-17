@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 // Schema of user collection documents
 // It's useful for validation and simplify usage of loaded documents
 const UserSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    required: true,
+    type: String,
+  },
   bdate: Date,
   age: { type: Number },
 });
