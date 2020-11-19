@@ -9,10 +9,13 @@ async function handleUsersGet(req, res) {
 
   // const existingCookies = res.getHeader('');
   // We are requiring browser setup new cookie
-  res.setHeader('Set-Cookie', 'authorized=1;');
+  // res.setHeader('Set-Cookie', 'authorized=1;');
 
   const response = res.json({
     status: 'Ok',
+    currentUser: {
+      full_name: req.user.getFullName(),
+    },
     data: await getUsers(carId),
   });
 

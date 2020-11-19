@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const {User} = require('../entities/user');
 const {Car} = require('../entities/car');
 
@@ -75,10 +76,15 @@ async function registerNewUser({userInfo}) {
     firstName: userInfo.first_name,
     lastName: userInfo.last_name,
     email: userInfo.email,
-    password: userInfo.password,
+    password: await getCryptedUserPassword(userInfo),
   });
 
   return newUser;
+}
+
+async function getCryptedUserPassword(userInfo) {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(userInfo.password, salt);
 }
 
 /**
@@ -92,11 +98,15 @@ async function registerNewUser({userInfo}) {
 async function loginUser({userInfo}) {
   const user = await User.findOne({where: {email: userInfo.email}});
 
-  if (user.password === userInfo.password) {
+  if (await comparePasswords(user, userInfo)) {
     return user;
   }
 
   throw new Error('Invalid credentials');
+}
+
+async function comparePasswords(user, userInfo) {
+  return bcrypt.compare(userInfo.password, user.password);
 }
 
 /**
@@ -116,7 +126,7 @@ module.exports = {
   updateUserById,
   deleteUserFromDB,
   registerNewUser,
-  loginUser
+  loginUser,
 };
 
 /**

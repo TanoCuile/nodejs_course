@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const debug = require('debug')('app:routers:logs');
 const {
   getUsers,
@@ -6,7 +7,7 @@ const {
   loginUser,
 } = require('@services/handle.users_info');
 const {usersCRUD} = require('@routes/users');
-const {SESSION_COOKIE_NAME} = require('@/config');
+const {SESSION_COOKIE_NAME, JWT_SECRET} = require('@/config');
 
 const {initializeWetherRoutes} = require('@routes/wether');
 const {Session} = require('../../../entities/session');
@@ -92,7 +93,18 @@ async function setUpLoggedInSession({res, user}) {
   });
   session.putData({loggedIn: new Date().toString()});
   session.save();
-  res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=${session.id}`);
+  // Possible way to have more session data - store it on cookies, but there's limitation 4Kb
+  // res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}={"sess_id": ${session.id}, "name": ${user.getFullName()}}`);
+  const token = jwt.sign(
+    {
+      full_name: user.getFullName(),
+      session_id: session.id,
+    },
+    JWT_SECRET
+  );
+  res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=${token}`);
+  // new Buffer(JSON.stringify({sess_id: 1, full_name: 'Stri Tred'})).toString('base64')
+  // eyJzZXNzX2lkIjoxLCJmdWxsX25hbWUiOiJTdHJpIFRyZWQifQ==
 }
 
 function initializeRegisterEndpoints(app) {

@@ -1,5 +1,6 @@
 const express = require('express');
-const {SESSION_COOKIE_NAME} = require('@/config');
+const jwt = require('jsonwebtoken');
+const {SESSION_COOKIE_NAME, JWT_SECRET} = require('@/config');
 const {Session} = require('../../../entities/session');
 const {User} = require('../../../entities/user');
 
@@ -47,35 +48,52 @@ function setUpMiddlewares(app) {
     next();
   });
 
+  app.use(async (req, res, next) => {
+    try {
+      const token = req.cookies[SESSION_COOKIE_NAME];
+      if (!token) {
+        return res.json({status: 'Error'});
+      }
+      const parsed = jwt.verify(token, JWT_SECRET);
+      req.user = parsed;
+    } catch (e) {
+      return next();
+    }
+    return next();
+    // const {infoObject, algoObject} = getJWTInfoHR(req);
+
+    // if (infoObject && infoObject.session_id) {
+    //   return res.json({infoObject, algoObject});
+    // }
+
+    // // Take session ID from cookie
+    // const sessionId = req.cookies[SESSION_COOKIE_NAME];
+
+    // if (!sessionId) {
+    //   return next();
+    // }
+
+    // const session = await Session.findOne({
+    //   include: [User],
+    //   where: {id: sessionId},
+    // });
+
+    // if (session) {
+    //   req.session = session;
+    //   req.user = session.user;
+    // } else {
+    //   res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=`);
+    // }
+
+    // return next();
+  });
+
   app.use('/api', (req, res, next) => {
     // Smart Client responsible for authorization headers
     // req.headers.authorized === 1
 
-    if (req.cookies.authorized !== '1') {
+    if (!req.user) {
       return res.status(403).json({status: 'Error'});
-    }
-
-    return next();
-  });
-
-  app.use(async (req, res, next) => {
-    // Take session ID from cookie
-    const sessionId = req.cookies[SESSION_COOKIE_NAME];
-
-    if (!sessionId) {
-      return next();
-    }
-
-    const session = await Session.findOne({
-      include: [User],
-      where: {id: sessionId},
-    });
-
-    if (session) {
-      req.session = session;
-      req.user = session.user;
-    } else {
-      res.setHeader('Set-Cookie', `SESSION_COOKIE_NAME=`);
     }
 
     return next();
@@ -85,3 +103,22 @@ function setUpMiddlewares(app) {
 module.exports = {
   setUpMiddlewares,
 };
+
+/**
+ * Hand writter JWT parser
+ *
+ * @param {import('express').Request} req
+ */
+function getJWTInfoHR(req) {
+  const authorization = req.headers['authorization'];
+
+  // Remove 'Bearer' prefix
+  const [, jwt] = authorization.split(' ');
+
+  // Split 'jwt' into functional parts
+  const [algo, info, secured] = jwt.split('.');
+
+  const algoObject = JSON.parse(Buffer.from(algo, 'base64').toString('utf8'));
+  const infoObject = JSON.parse(Buffer.from(info, 'base64').toString('utf8'));
+  return {infoObject, algoObject};
+}
