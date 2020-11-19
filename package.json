@@ -34,6 +34,7 @@
   "scripts": {
     "start": "node ./index.js run 0.0.0.0",
     "start:local": "nodemon --inspect ./index.js run localhost 3000",
+    "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up",
     "lint": "eslint ./src/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:env": "docker-compose up"

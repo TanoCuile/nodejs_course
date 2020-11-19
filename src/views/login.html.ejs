@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <h2>Actions:</h2>
+    <ul>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/log_in">Login</a></li>
+    </ul>
+    <form method="POST" action="/log_in">
+      <div>
+        <% if (error) { %>
+        <span style="color: red"><%= error %></span>
+        <% } %>
+      </div>
+      <div>
+        <label>Email: <input name="email" type="email" /></label>
+      </div>
+      <div>
+        <label>Password: <input name="password" type="password" /></label>
+      </div>
+
+      <input type="submit" value="Register" />
+    </form>
+    <script src="/js/main/index.js" type="text/javascript"></script>
+  </body>
+</html>

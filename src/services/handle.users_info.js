@@ -9,7 +9,7 @@ const {Car} = require('../entities/car');
 async function getUsers(carId) {
   let where = {};
   if (carId) {
-    where = {'id': carId};
+    where = {id: carId};
   }
   return {
     users: await User.findAll({
@@ -17,7 +17,7 @@ async function getUsers(carId) {
         {
           model: Car,
           as: 'cars',
-          where
+          where,
         },
       ],
     }),
@@ -55,6 +55,51 @@ async function handleUserInfo({user}) {
 }
 
 /**
+ * Provides required functionality for register new user
+ *
+ * @param {{userInfo: {
+ *    first_name: string,
+ *    last_name: string,
+ *    email: string,
+ *    password: string,
+ * }}} payload
+ */
+async function registerNewUser({userInfo}) {
+  const foudUsers = await User.findAll({where: {email: userInfo.email}});
+
+  if (foudUsers.length) {
+    throw new Error('Email exists!');
+  }
+
+  const newUser = User.create({
+    firstName: userInfo.first_name,
+    lastName: userInfo.last_name,
+    email: userInfo.email,
+    password: userInfo.password,
+  });
+
+  return newUser;
+}
+
+/**
+ * Provides required functionality for login
+ *
+ * @param {{userInfo: {
+ *    email: string,
+ *    password: string,
+ * }}} payload
+ */
+async function loginUser({userInfo}) {
+  const user = await User.findOne({where: {email: userInfo.email}});
+
+  if (user.password === userInfo.password) {
+    return user;
+  }
+
+  throw new Error('Invalid credentials');
+}
+
+/**
  * @param {string} id
  */
 async function deleteUserFromDB(id) {
@@ -70,6 +115,8 @@ module.exports = {
   getUserById,
   updateUserById,
   deleteUserFromDB,
+  registerNewUser,
+  loginUser
 };
 
 /**

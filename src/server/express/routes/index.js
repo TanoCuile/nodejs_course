@@ -1,9 +1,15 @@
 const express = require('express');
 const debug = require('debug')('app:routers:logs');
-const { getUsers } = require('@services/handle.users_info');
-const { usersCRUD } = require('@routes/users');
+const {
+  getUsers,
+  registerNewUser,
+  loginUser,
+} = require('@services/handle.users_info');
+const {usersCRUD} = require('@routes/users');
+const {SESSION_COOKIE_NAME} = require('@/config');
 
-const { initializeWetherRoutes } = require('@routes/wether');
+const {initializeWetherRoutes} = require('@routes/wether');
+const {Session} = require('../../../entities/session');
 
 function initializeAPI(app) {
   /**
@@ -29,12 +35,15 @@ function settUpRoutes(app) {
 
   app.get('/', async (req, res) => {
     res.setHeader('Content-Type', 'text/html');
-    const { users } = await getUsers();
+    const {users} = await getUsers();
     return res.render('index.html.ejs', {
-      name: req.query.name || 'John',
+      name: req.user ? req.user.getFullName() : 'John Doe',
       users,
     });
   });
+
+  initializeRegisterEndpoints(app);
+  initializeLoginEndpoints(app);
 
   const apiRouter = new express.Router();
   initializeAPI(apiRouter);
@@ -43,4 +52,76 @@ function settUpRoutes(app) {
   debug('Routers initialized');
 }
 
-module.exports = { settUpRoutes };
+module.exports = {settUpRoutes};
+
+function initializeLoginEndpoints(app) {
+  app.get('/log_in', async (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+
+    return res.render('login.html.ejs', {error: undefined});
+  });
+
+  // Endpoint for handling registration info
+  app.post('/log_in', express.urlencoded(), async (req, res) => {
+    try {
+      /**
+       * @type {{
+       *    email: string,
+       *    password: string,
+       * }}
+       */
+      const userInformation = req.body;
+
+      const user = await loginUser({userInfo: userInformation});
+
+      await setUpLoggedInSession({res, user});
+
+      return res.redirect('/');
+    } catch (e) {
+      return res.render('login.html.ejs', {
+        error: e.toString(),
+      });
+    }
+  });
+}
+
+// Doing whatever we need to setup liggedIn session
+async function setUpLoggedInSession({res, user}) {
+  const session = await Session.create({
+    userId: user.id,
+  });
+  session.putData({loggedIn: new Date().toString()});
+  session.save();
+  res.setHeader('Set-Cookie', `${SESSION_COOKIE_NAME}=${session.id}`);
+}
+
+function initializeRegisterEndpoints(app) {
+  // Endpoint for rendering register page
+  app.get('/register', async (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+
+    return res.render('register.html.ejs', {error: undefined});
+  });
+
+  // Endpoint for handling registration info
+  app.post('/register', express.urlencoded(), async (req, res) => {
+    try {
+      /**
+       * @type {{
+       *    first_name: string,
+       *    last_name: string,
+       *    email: string,
+       *    password: string,
+       * }}
+       */
+      const userInformation = req.body;
+
+      await registerNewUser({userInfo: userInformation});
+      return res.redirect('/');
+    } catch (e) {
+      return res.render('register.html.ejs', {
+        error: e.toString(),
+      });
+    }
+  });
+}

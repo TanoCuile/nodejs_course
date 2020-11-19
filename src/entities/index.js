@@ -1,9 +1,14 @@
 const {getInstance} = require('./db');
 const {User} = require('./user');
 const {Car} = require('./car');
+const {Session} = require('./session');
+
 async function initializeDataBase() {
   Car.belongsTo(User);
   User.hasMany(Car);
+
+  Session.belongsTo(User);
+  User.hasMany(Session);
   // Sync all initialized models with database
   // Bad pattern: use migrations
   // Good for development

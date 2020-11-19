@@ -1,4 +1,7 @@
 const express = require('express');
+const {SESSION_COOKIE_NAME} = require('@/config');
+const {Session} = require('../../../entities/session');
+const {User} = require('../../../entities/user');
 
 /**
  * @param {import('express').Request} req
@@ -25,10 +28,7 @@ function setUpMiddlewares(app) {
 
   app.use('/users', validateUserRequestMiddleware);
 
-  app.use('/api', (req, res, next) => {
-    // Smart Client responsible for authorization headers
-    // req.headers.authorized === 1
-
+  app.use((req, res, next) => {
     // General principle
     // Header: Cookie = 'cookie_name=COOKIE_VALUE;cookie_name_2=COOKIE_VALUE_2'
     const cookies = req.headers.cookie
@@ -40,10 +40,42 @@ function setUpMiddlewares(app) {
         total[key] = value;
         return total;
       }, {});
-      // Step 3: {cookie_name:COOKIE_VALUE, cookie_name_2:COOKIE_VALUE_2}
+    // Step 3: {cookie_name:COOKIE_VALUE, cookie_name_2:COOKIE_VALUE_2}
 
-    if (cookies.authorized !== '1') {
+    req.cookies = cookies;
+
+    next();
+  });
+
+  app.use('/api', (req, res, next) => {
+    // Smart Client responsible for authorization headers
+    // req.headers.authorized === 1
+
+    if (req.cookies.authorized !== '1') {
       return res.status(403).json({status: 'Error'});
+    }
+
+    return next();
+  });
+
+  app.use(async (req, res, next) => {
+    // Take session ID from cookie
+    const sessionId = req.cookies[SESSION_COOKIE_NAME];
+
+    if (!sessionId) {
+      return next();
+    }
+
+    const session = await Session.findOne({
+      include: [User],
+      where: {id: sessionId},
+    });
+
+    if (session) {
+      req.session = session;
+      req.user = session.user;
+    } else {
+      res.setHeader('Set-Cookie', `SESSION_COOKIE_NAME=`);
     }
 
     return next();

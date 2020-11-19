@@ -25,6 +25,15 @@ User.init(
       type: DataTypes.STRING(64),
       field: 'last_name',
     },
+    email: {
+      type: DataTypes.STRING(256),
+      field: 'email',
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING(256),
+      field: 'password',
+    },
     birthday: {
       type: DataTypes.DATE,
       field: 'date_of_birth',

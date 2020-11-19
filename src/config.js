@@ -33,6 +33,7 @@ const MONGO_USER = process.env.MONGO_USER || 'course_user';
 const MONGO_DB = process.env.MONGO_DB || 'node_course';
 // Url for to mongo db
 const MONGO_DB_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@nodejscoursecluster.6lx5g.mongodb.net/${MONGO_DB}`;
+const SESSION_COOKIE_NAME = 'x-user-auth-session';
 
 module.exports = {
   PATH_TO_INDEX,
@@ -42,4 +43,5 @@ module.exports = {
   PORT_PARAMETER_NAME,
   PATH_TO_DATA_FILE,
   MONGO_DB_URL,
+  SESSION_COOKIE_NAME
 };
