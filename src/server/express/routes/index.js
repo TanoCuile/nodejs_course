@@ -1,5 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const {join} = require('path');
+const {promises: fs} = require('fs');
+const imagemin = require('imagemin');
+const imageminPNG = require('imagemin-pngquant');
+const imageminJPG = require('imagemin-jpegtran');
 const debug = require('debug')('app:routers:logs');
 const {
   getUsers,
@@ -8,6 +13,9 @@ const {
 } = require('@services/handle.users_info');
 const {usersCRUD} = require('@routes/users');
 const {SESSION_COOKIE_NAME, JWT_SECRET} = require('@/config');
+const multer = require('multer')({
+  dest: join(process.cwd(), 'data', 'uploads'),
+});
 
 const {initializeWetherRoutes} = require('@routes/wether');
 const {Session} = require('../../../entities/session');
@@ -37,14 +45,20 @@ function settUpRoutes(app) {
   app.get('/', async (req, res) => {
     const {page, sort, sort_direction: sortDirection} = req.query || {};
     res.setHeader('Content-Type', 'text/html');
+
     const {users} = await getUsers({
       page: Number(page) || 1,
       sort: sort || 'age',
       sortDirection: Number(sortDirection) || 1,
     });
+
     console.log(users);
+
+    const images = await fs.readdir(join(process.cwd(), 'public', 'images'));
+
     return res.render('index.html.ejs', {
       name: req.user ? req.user.getFullName() : 'John Doe',
+      images,
       users,
     });
   });
@@ -55,6 +69,39 @@ function settUpRoutes(app) {
   const apiRouter = new express.Router();
   initializeAPI(apiRouter);
   app.use('/api', apiRouter);
+
+  app.post('/upload', multer.single('custom_image'), async (req, res) => {
+    /**
+     * @type {string}
+     */
+    const file = req.file;
+
+    // Validate type of uploaded file
+    if (!['image/jpeg', 'image/png'].includes(file.mimetype)) {
+      return res.status(400).json({status: 'Error', message: 'Not supported type'});
+    }
+
+    const fileName = file.originalname;
+    const pathToFile = file.path;
+
+    /**
+     * @type {[{destinationPath: string}]}
+     */
+    const fileInfo = await imagemin([pathToFile], {
+      destination: 'public/images',
+      plugins: [imageminJPG(), imageminPNG()],
+    });
+
+    const finalImagePath = fileInfo[0].destinationPath;
+
+    await fs.unlink(pathToFile);
+    await fs.rename(
+      join(process.cwd(), finalImagePath),
+      join(process.cwd(), 'public', 'images', fileName)
+    );
+
+    return res.redirect('/');
+  });
 
   debug('Routers initialized');
 }

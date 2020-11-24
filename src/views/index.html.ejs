@@ -19,6 +19,21 @@
       </li>
       <% } %>
     </ul>
+    <div>
+      <h3>Uploaded:</h3>
+      <% for(const image of images) { %>
+        <div>
+          <h4><%= image %></h4>
+          <img src="/img/<%= image %>" style="width: 100px; height: 100px;" />
+        </div>
+      <%}%>
+    </div>
+    <div>
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="custom_image" />
+        <input type="submit" value="Upload" />
+      </form>
+    </div>
     <script src="/js/main/index.js" type="text/javascript"></script>
   </body>
 </html>
