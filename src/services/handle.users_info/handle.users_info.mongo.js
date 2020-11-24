@@ -6,20 +6,42 @@ const {UserModel} = require('../../models/user');
 async function getUsers(
   {page, sort, sortDirection} = {page: 1, sort: 'age', sortDirection: 1}
 ) {
-  console.log('Request', {page, sort, sortDirection});
   return {
-    users: await UserModel.find(
-      {},
-      {},
+    users: await UserModel.aggregate([
       {
-        sort: {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'comments',
+        },
+      },
+      {
+        $sort: {
           [sort]: sortDirection,
         },
-        skip: (page - 1) * 5,
-        limit: 5,
-      }
-    ),
+      },
+      {
+        $skip: (page - 1) * 5,
+      },
+      {
+        $limit: 5,
+      },
+    ]),
   };
+  // return {
+  //   users: await UserModel.find(
+  //     {},
+  //     {},
+  //     {
+  //       sort: {
+  //         [sort]: sortDirection,
+  //       },
+  //       skip: (page - 1) * 5,
+  //       limit: 5,
+  //     }
+  //   ),
+  // };
 }
 
 /**

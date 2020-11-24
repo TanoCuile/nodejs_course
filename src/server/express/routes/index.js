@@ -38,10 +38,11 @@ function settUpRoutes(app) {
     const {page, sort, sort_direction: sortDirection} = req.query || {};
     res.setHeader('Content-Type', 'text/html');
     const {users} = await getUsers({
-      page: page || 1,
+      page: Number(page) || 1,
       sort: sort || 'age',
       sortDirection: Number(sortDirection) || 1,
     });
+    console.log(users);
     return res.render('index.html.ejs', {
       name: req.user ? req.user.getFullName() : 'John Doe',
       users,
