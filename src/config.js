@@ -35,6 +35,7 @@ const MONGO_DB = process.env.MONGO_DB || 'node_course';
 const MONGO_DB_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@nodejscoursecluster.6lx5g.mongodb.net/${MONGO_DB}`;
 const SESSION_COOKIE_NAME = 'x-user-auth-session';
 const JWT_SECRET = 'SOME_SECRET';
+const GCS ='ctPUeNdaaVoF4l4RDIHsad+oeT68DdOvKH9GHMFI';
 
 module.exports = {
   PATH_TO_INDEX,
