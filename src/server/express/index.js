@@ -6,8 +6,8 @@ const { promisify } = require('util');
 
 const { setUpMiddlewares } = require('@middlewares');
 const { settUpRoutes } = require('@routes');
-// const { initializeDataBase } = require('../../models');
-const { initializeDataBase } = require('../../entities');
+const { initializeDataBase } = require('../../models');
+// const { initializeDataBase } = require('../../entities');
 
 function addJSStatic(app) {
   const pathToJS = join(process.cwd(), 'public', 'js');

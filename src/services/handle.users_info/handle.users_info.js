@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-const {User} = require('../entities/user');
-const {Car} = require('../entities/car');
+const {User} = require('../../entities/user');
+const {Car} = require('../../entities/car');
 
 /**
  * @param {number} carId

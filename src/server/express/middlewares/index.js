@@ -49,16 +49,16 @@ function setUpMiddlewares(app) {
   });
 
   app.use(async (req, res, next) => {
-    try {
-      const token = req.cookies[SESSION_COOKIE_NAME];
-      if (!token) {
-        return res.json({status: 'Error'});
-      }
-      const parsed = jwt.verify(token, JWT_SECRET);
-      req.user = parsed;
-    } catch (e) {
-      return next();
-    }
+    // try {
+    //   const token = req.cookies[SESSION_COOKIE_NAME];
+    //   if (!token) {
+    //     return res.json({status: 'Error'});
+    //   }
+    //   const parsed = jwt.verify(token, JWT_SECRET);
+    //   req.user = parsed;
+    // } catch (e) {
+    //   return next();
+    // }
     return next();
     // const {infoObject, algoObject} = getJWTInfoHR(req);
 

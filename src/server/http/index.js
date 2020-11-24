@@ -63,7 +63,7 @@ function requestListener(req, res) {
       // Якщо є "usersString" - нам потрібно його опрацювати
       if (usersString) {
         /**
-         * @type {import('../../services/handle.users_info').HandleUsersPayload}
+         * @type {import('../../services/handle.users_info/handle.users_info').HandleUsersPayload}
          */
         const users = JSON.parse(usersString);
         // Відправляємо дані запиту на подальше опрацювання

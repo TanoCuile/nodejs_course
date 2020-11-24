@@ -35,8 +35,13 @@ function settUpRoutes(app) {
   // Add `Access-Control-Allow-Origin` by using `cors`
 
   app.get('/', async (req, res) => {
+    const {page, sort, sort_direction: sortDirection} = req.query || {};
     res.setHeader('Content-Type', 'text/html');
-    const {users} = await getUsers();
+    const {users} = await getUsers({
+      page: page || 1,
+      sort: sort || 'age',
+      sortDirection: Number(sortDirection) || 1,
+    });
     return res.render('index.html.ejs', {
       name: req.user ? req.user.getFullName() : 'John Doe',
       users,

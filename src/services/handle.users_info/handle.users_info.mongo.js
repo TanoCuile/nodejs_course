@@ -1,11 +1,24 @@
-const { UserModel } = require('../models/user');
+const {UserModel} = require('../../models/user');
 
 /**
  * @returns {Promise<{users: User[]}>}
  */
-async function getUsers() {
+async function getUsers(
+  {page, sort, sortDirection} = {page: 1, sort: 'age', sortDirection: 1}
+) {
+  console.log('Request', {page, sort, sortDirection});
   return {
-    users: await UserModel.find(),
+    users: await UserModel.find(
+      {},
+      {},
+      {
+        sort: {
+          [sort]: sortDirection,
+        },
+        skip: (page - 1) * 5,
+        limit: 5,
+      }
+    ),
   };
 }
 
@@ -36,7 +49,7 @@ async function updateUserById(id, userInfo) {
 /**
  * @param {HandleUsersPayload} payload
  */
-async function handleUserInfo({ user }) {
+async function handleUserInfo({user}) {
   // we can add custom validation. or use model one
   // validateUserCreation();
   // By using `UserModel` interface we are adding new document to `user` collection
@@ -56,7 +69,11 @@ async function deleteUserFromDB(id) {
 }
 
 module.exports = {
-  handleUserInfo, getUsers, getUserById, updateUserById, deleteUserFromDB,
+  handleUserInfo,
+  getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserFromDB,
 };
 
 /**
