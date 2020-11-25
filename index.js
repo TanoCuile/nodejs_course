@@ -37,3 +37,17 @@ function runServerCallaback(payload) {
 // якщо в подальшому у нас появиться інша команда ми передамо додатковий обробник
 // та змінимо тип вхідних параметрів
 runUserCommand(runServerCallaback);
+
+
+/**
+ * Here an description of some useful JsDoc's
+ * Keep in mind that JsDoc is just annotation for self management and inline documentation.
+ * For plain node - it not have additional functionality and not provide any restrictions.
+ * But editors (like VsCode) supports validation and will show you mistakes.
+ *
+ * But you can find packages which can reed and build project docummentation based on JsDoc.
+ *
+ * NOTE: JsDoc style which I'm using is not plain JsDock(https://jsdoc.app/) but Closure-like (https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler)
+ * Playground: https://www.typescriptlang.org/play?useJavaScript=truee=4#example/jsdoc-support
+ * Some docs: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
+ */
