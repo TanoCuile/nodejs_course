@@ -32,6 +32,7 @@ function setUpExpressApplication(app) {
   );
   // Додаємо синонім для доступу до css файлів
   app.use('/css', express.static(join(process.cwd(), 'public', 'css')));
+  // Add `/img` alias for `/public/images` folder
   app.use('/img', express.static(join(process.cwd(), 'public', 'images')));
   // Додаємо синонім для доступу до js файлів (щоб виконувались в браузері)
   addJSStatic(app);

@@ -13,6 +13,9 @@ const {
 } = require('@services/handle.users_info');
 const {usersCRUD} = require('@routes/users');
 const {SESSION_COOKIE_NAME, JWT_SECRET} = require('@/config');
+// We initialize multer instance
+// As far as on this file we will use only one configuration for multer
+// so we not importing multer package separatelly
 const multer = require('multer')({
   dest: join(process.cwd(), 'data', 'uploads'),
 });
@@ -70,6 +73,9 @@ function settUpRoutes(app) {
   initializeAPI(apiRouter);
   app.use('/api', apiRouter);
 
+  // The endpoint which can process `multipart/form-data` and works with files
+  // should have multer middleware
+  // Here we letting multer know which field_name to use (is our case it's `custom_image`)
   app.post('/upload', multer.single('custom_image'), async (req, res) => {
     /**
      * @type {string}
@@ -81,25 +87,39 @@ function settUpRoutes(app) {
       return res.status(400).json({status: 'Error', message: 'Not supported type'});
     }
 
+    /**
+     * @type {string}
+     */
     const fileName = file.originalname;
-    const pathToFile = file.path;
+    /**
+     * @type {string}
+     */
+    const multerTemporaryFilePath = file.path;
 
     /**
      * @type {[{destinationPath: string}]}
      */
-    const fileInfo = await imagemin([pathToFile], {
+    const fileInfo = await imagemin([multerTemporaryFilePath], {
       destination: 'public/images',
       plugins: [imageminJPG(), imageminPNG()],
     });
 
+    /**
+     * @type {string}
+     */
     const finalImagePath = fileInfo[0].destinationPath;
 
-    await fs.unlink(pathToFile);
+    // We removing temporary file
+    // Usually better to do that asynchroniously
+    await fs.unlink(multerTemporaryFilePath);
+    // Also we need to move minified file into public folder
+    // where it can be accesible from browser by `express.static`
     await fs.rename(
       join(process.cwd(), finalImagePath),
       join(process.cwd(), 'public', 'images', fileName)
     );
 
+    // We wat to redirect to home page(because we not have separated page)
     return res.redirect('/');
   });
 

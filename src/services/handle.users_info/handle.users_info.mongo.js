@@ -7,6 +7,8 @@ async function getUsers(
   {page, sort, sortDirection} = {page: 1, sort: 'age', sortDirection: 1}
 ) {
   return {
+    // We are using aggregation for joining comments
+    // by field `user` which is the same as user `_id`
     users: await UserModel.aggregate([
       {
         $lookup: {
@@ -21,6 +23,8 @@ async function getUsers(
           [sort]: sortDirection,
         },
       },
+      // Keep in mind that aggregation works `chain by chain`
+      // And if we put $limit before $skip - pagination will not works
       {
         $skip: (page - 1) * 5,
       },
@@ -29,6 +33,7 @@ async function getUsers(
       },
     ]),
   };
+  // Here the example of regular mongo query prepared for pagination and sorting
   // return {
   //   users: await UserModel.find(
   //     {},
