@@ -1,12 +1,13 @@
 const express = require('express');
-const { join } = require('path');
+const {join} = require('path');
 const cors = require('cors');
 const ejs = require('ejs');
-const { promisify } = require('util');
+const {promisify} = require('util');
 
-const { setUpMiddlewares } = require('@middlewares');
-const { settUpRoutes } = require('@routes');
-const { initializeDataBase } = require('../../models');
+const {setUpMiddlewares} = require('@middlewares');
+const {settUpRoutes} = require('@routes');
+const {initializeDataBase} = require('../../models');
+const {download} = require('../../services/file_storage');
 // const { initializeDataBase } = require('../../entities');
 
 function addJSStatic(app) {
@@ -28,12 +29,21 @@ function setUpExpressApplication(app) {
   // Додаємо іконку нашого сайту, щоб браузер краще його показував
   app.use(
     '/favicon.ico',
-    express.static(join(process.cwd(), 'public', '/favicon.ico')),
+    express.static(join(process.cwd(), 'public', '/favicon.ico'))
   );
   // Додаємо синонім для доступу до css файлів
   app.use('/css', express.static(join(process.cwd(), 'public', 'css')));
+
   // Add `/img` alias for `/public/images` folder
-  app.use('/img', express.static(join(process.cwd(), 'public', 'images')));
+  app.get('/img/:file_name', async (req, res) => {
+    const fileName = req.params.file_name;
+
+    res.status(200);
+    res.setHeader('Content-Type', 'image/png');
+    res.write(await download(fileName));
+    res.end();
+  });
+
   // Додаємо синонім для доступу до js файлів (щоб виконувались в браузері)
   addJSStatic(app);
 
@@ -52,18 +62,20 @@ function setUpExpressApplication(app) {
 // handler - кінцевий обробник який підпадає під express_router
 
 // Функція для запуску сервера (вхідна точка запуску express сервера)
-function runServer({ host, port }) {
+function runServer({host, port}) {
   // Створюємо об*єкт express.Application для конфігурації нашого сервера
   const app = express();
 
-  return initializeDataBase()
-    .then(() => console.log('DB connected...'))
-    .then(() => setUpExpressApplication(app))
-    .then(() => console.log('App configured...'))
-    // Запускаємо сконфігурований сервер
-    .then(() => promisify(app.listen.bind(app))(port, host))
-    .then(() => console.log('Listening...'))
-    .catch((e) => console.error(e));
+  return (
+    initializeDataBase()
+      .then(() => console.log('DB connected...'))
+      .then(() => setUpExpressApplication(app))
+      .then(() => console.log('App configured...'))
+      // Запускаємо сконфігурований сервер
+      .then(() => promisify(app.listen.bind(app))(port, host))
+      .then(() => console.log('Listening...'))
+      .catch((e) => console.error(e))
+  );
 }
 
 module.exports = {
