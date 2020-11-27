@@ -9,29 +9,7 @@ async function getUsers(
   return {
     // We are using aggregation for joining comments
     // by field `user` which is the same as user `_id`
-    users: await UserModel.aggregate([
-      {
-        $lookup: {
-          from: 'comments',
-          localField: '_id',
-          foreignField: 'user',
-          as: 'comments',
-        },
-      },
-      {
-        $sort: {
-          [sort]: sortDirection,
-        },
-      },
-      // Keep in mind that aggregation works `chain by chain`
-      // And if we put $limit before $skip - pagination will not works
-      {
-        $skip: (page - 1) * 5,
-      },
-      {
-        $limit: 5,
-      },
-    ]),
+    users: await UserModel.aggregate(getAggregation({sort, sortDirection, page})),
   };
   // Here the example of regular mongo query prepared for pagination and sorting
   // return {
@@ -47,6 +25,32 @@ async function getUsers(
   //     }
   //   ),
   // };
+}
+
+function getAggregation({sort, sortDirection, page}) {
+  return [
+    {
+      $lookup: {
+        from: 'comments',
+        localField: '_id',
+        foreignField: 'user',
+        as: 'comments',
+      },
+    },
+    {
+      $sort: {
+        [sort]: sortDirection,
+      },
+    },
+    // Keep in mind that aggregation works `chain by chain`
+    // And if we put $limit before $skip - pagination will not works
+    {
+      $skip: (page - 1) * 5,
+    },
+    {
+      $limit: 5,
+    },
+  ];
 }
 
 /**

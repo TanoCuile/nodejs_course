@@ -1,5 +1,5 @@
 // Imports the Google Cloud client library.
-const {Storage} = require('@google-cloud/storage');
+const {bucket} = require('./storage_driver');
 const DEFAULT_BUCKET_NAME = 'node-course-test-bucket';
 
 // It looks into env variable `GOOGLE_APPLICATION_CREDENTIALS`
@@ -10,8 +10,6 @@ const DEFAULT_BUCKET_NAME = 'node-course-test-bucket';
 // Instantiates a client. If you don't specify credentials when constructing
 // the client, the client library will look for credentials in the
 // environment.
-const storage = new Storage();
-const bucket = storage.bucket(DEFAULT_BUCKET_NAME);
 
 // Makes an authenticated API request.
 async function listBuckets() {
