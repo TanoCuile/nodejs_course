@@ -9,10 +9,15 @@ const service = require('../../../../src/services/handle.users_info/handle.users
 // Initialize sandbox for making
 // const sandbox = sinon.sandbox();
 
+// `describe` blocks used for:
+// 1. grop test statements
+// 2. provide more information about tested scenario
 describe('services > handle.user_info > handle.user_info.mongo', () => {
+  // `describe` blocks can organize deep structure
   describe('#getUsers', () => {
     let aggregateStub;
     let response;
+    // `beforeEach` - will be called before each `it` statement on current `describe` block
     beforeEach(async () => {
       // Spy will check calls count arguments etc.
       // But it will call original functionality
@@ -20,6 +25,7 @@ describe('services > handle.user_info > handle.user_info.mongo', () => {
       // Stub will replace original original functionality by defined
       // And also it will calculate count of calls and arguments
       aggregateStub = sinon.stub(UserModel, 'aggregate');
+      // Setup response from stub, in our case it's Promise - so we are using `resolves` method
       aggregateStub.resolves([
         {
           user_field: '1',
@@ -36,10 +42,14 @@ describe('services > handle.user_info > handle.user_info.mongo', () => {
       });
     });
 
+    // `afterEach` - called after each statement on closest `describe` block
     afterEach(() => {
+      // Me must remove all spyes and stubs to prepare it for next tests
       sinon.restore();
     });
 
+    // `it` statement contains assertions for one test case
+    // As smaller your `it` stetements so better your unit tests
     it('Should return users by aggregation', async () => {
       // Next wil not work because `equal` only for scalar comparison
       // @see: https://shouldjs.github.io/#assertion-equal
