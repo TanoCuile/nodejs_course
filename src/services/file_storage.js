@@ -1,6 +1,5 @@
 // Imports the Google Cloud client library.
-const {bucket} = require('./storage_driver');
-const DEFAULT_BUCKET_NAME = 'node-course-test-bucket';
+const {bucket, storage} = require('./storage_driver');
 
 // It looks into env variable `GOOGLE_APPLICATION_CREDENTIALS`
 // And it will load key by path on `GOOGLE_APPLICATION_CREDENTIALS`
@@ -14,9 +13,7 @@ const DEFAULT_BUCKET_NAME = 'node-course-test-bucket';
 // Makes an authenticated API request.
 async function listBuckets() {
   try {
-    const results = await storage.getBuckets();
-
-    const [buckets] = results;
+    const [buckets] = await storage.getBuckets();
 
     console.log('Buckets:');
     buckets.forEach((bucket) => {
@@ -41,9 +38,12 @@ async function getFiles() {
  */
 async function upload(pathToFile, finalFileName) {
   const info = await bucket.upload(process.cwd() + '/' + pathToFile);
+
+  // Rename functionality, if we uploading temporary file with random name
   if (finalFileName) {
     await bucket.file(info[0].name).rename(finalFileName);
   }
+
   return true;
 }
 

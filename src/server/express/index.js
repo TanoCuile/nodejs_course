@@ -36,11 +36,18 @@ function setUpExpressApplication(app) {
 
   // Add `/img` alias for `/public/images` folder
   app.get('/img/:file_name', async (req, res) => {
+    // Public images we want to load from cloud
     const fileName = req.params.file_name;
 
+    // We are sending status code 200
+    // Browser should know that response is ok
     res.status(200);
+    // We need to let browser know that response is image
     res.setHeader('Content-Type', 'image/png');
+    // After headers we need to send file content
     res.write(await download(fileName));
+    // Then finishing response,
+    // like letting browser know that it can stor listening port
     res.end();
   });
 

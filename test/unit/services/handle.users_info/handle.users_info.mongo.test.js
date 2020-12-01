@@ -1,6 +1,10 @@
+// Lightweight library for better assertion
 const should = require('should');
+// Library for mocking, stubing etc...
 const sinon = require('sinon');
+// We are importing `UserModel` for mocking it in future
 const {UserModel} = require('../../../../src/models/user');
+// Importing service for providing tests
 const service = require('../../../../src/services/handle.users_info/handle.users_info.mongo');
 // Initialize sandbox for making
 // const sandbox = sinon.sandbox();
