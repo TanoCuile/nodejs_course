@@ -1,6 +1,6 @@
 const express = require('express');
 const http = require('http');
-const {join} = require('path');
+const {join, resolve} = require('path');
 const cors = require('cors');
 const ejs = require('ejs');
 const {promisify} = require('util');
@@ -26,7 +26,7 @@ function addJSStatic(app) {
  */
 function setUpExpressApplication(app) {
   app.use(cors());
-  app.set('views', join(process.cwd(), 'src', 'views'));
+  app.set('views', resolve(__dirname, '..', '..', 'views'));
   app.engine('ejs', ejs.renderFile);
   // Додаємо іконку нашого сайту, щоб браузер краще його показував
   app.use(
