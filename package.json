@@ -14,6 +14,7 @@
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^9.0.1",
+    "joi": "^17.3.0",
     "json-body-parser": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
@@ -32,8 +33,10 @@
     "eslint-plugin-react": "^7.21.5",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
+    "rewire": "^5.0.0",
     "should": "^13.2.3",
     "sinon": "^9.2.1",
+    "supertest": "^6.0.1",
     "supertest-promised": "^1.0.0"
   },
   "_moduleAliases": {
@@ -49,7 +52,8 @@
     "lint": "eslint ./src/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:env": "docker-compose up",
-    "test:unit": "mocha"
+    "test:unit": "cd ./test/unit && mocha || cd ../../",
+    "test:integration": "cd ./test/integration && mocha || cd ../../"
   },
   "repository": {
     "type": "git",

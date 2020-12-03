@@ -1,25 +1,26 @@
 const should = require('should');
 const sinon = require('sinon');
+const rewire = require('rewire');
 const {
   initializeHomePageEndpoint,
-} = require('../../src/server/express/routes/initializeHomePageEndpoint');
-const {UserModel} = require('../../src/models/user');
-const googleStorageLibrary = require('@google-cloud/storage');
-
-class MockStorage {
-  constructor() {
-    console.log('-------------');
-  }
-}
+} = require('../../../src/server/express/routes/initializeHomePageEndpoint');
+const {UserModel} = require('../../../src/models/user');
+const storageIndex = require('../../../src/services/file_storage/index');
 
 describe('Check `/` alias functionality', () => {
   /**
    * @type {import('sinon').SinonSandbox}
    */
   let sandbox;
+  before(() => {
+    storageIndex.storage = {};
+    storageIndex.bucket = {};
+  });
+
   beforeEach(() => {
     sandbox = sinon.createSandbox();
   });
+
   afterEach(() => {
     sandbox.restore();
   });
@@ -37,6 +38,9 @@ describe('Check `/` alias functionality', () => {
       should(appArguments[0]).be.equal('/');
     });
     it('handler should render proper page', async () => {
+      storageIndex.bucket = {
+        getFiles: () => Promise.resolve([[{name: 'SomeFileName1'}]]),
+      };
       aggregateStub = sinon.stub(UserModel, 'aggregate');
       aggregateStub.resolves([
         {
@@ -50,7 +54,7 @@ describe('Check `/` alias functionality', () => {
 
       const renderStub = sandbox.stub();
       const setHeaderStub = sandbox.stub();
-      const storageStub = sandbox.stub(googleStorageLibrary.Storage, 'Storage');
+      // const storageStub = sandbox.stub(googleStorageLibrary.Storage, 'Storage');
 
       await handler(
         {
@@ -65,6 +69,21 @@ describe('Check `/` alias functionality', () => {
           setHeader: setHeaderStub,
         }
       );
+
+      should(
+        renderStub.calledOnceWith('index.html.ejs', {
+          name: 'John Doe',
+          images: ['SomeFileName1'],
+          users: [
+            {
+              user_field: '127',
+            },
+            {
+              user_field: '276',
+            },
+          ],
+        })
+      ).be.equal(true);
     });
   });
 });

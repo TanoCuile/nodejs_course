@@ -69,7 +69,7 @@ function setUpExpressApplication(app) {
 // handler - кінцевий обробник який підпадає під express_router
 
 // Функція для запуску сервера (вхідна точка запуску express сервера)
-function runServer({host, port}) {
+function runServer({host, port} = {}) {
   // Створюємо об*єкт express.Application для конфігурації нашого сервера
   const app = express();
 
@@ -81,6 +81,7 @@ function runServer({host, port}) {
       // Запускаємо сконфігурований сервер
       .then(() => promisify(app.listen.bind(app))(port, host))
       .then(() => console.log('Listening...'))
+      .then(() => app)
       .catch((e) => console.error(e))
   );
 }

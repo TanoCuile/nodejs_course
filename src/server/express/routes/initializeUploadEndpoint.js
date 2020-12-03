@@ -1,4 +1,3 @@
-const {join} = require('path');
 const {promises: fs} = require('fs');
 const imagemin = require('imagemin');
 const imageminPNG = require('imagemin-pngquant');

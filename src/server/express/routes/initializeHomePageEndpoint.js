@@ -1,7 +1,5 @@
-const {join} = require('path');
-const {promises: fs} = require('fs');
 const {getUsers} = require('../../../services/handle.users_info');
-const {getFiles} = require('../../../services/file_storage');
+const storage = require('../../../services/file_storage');
 
 async function handleGetHomePage(req, res) {
   const {page, sort, sort_direction: sortDirection} = req.query || {};
@@ -14,7 +12,7 @@ async function handleGetHomePage(req, res) {
   });
 
   // const images = await fs.readdir(join(process.cwd(), 'public', 'images'));
-  const images = await getFiles();
+  const images = await storage.getFiles();
 
   return res.render('index.html.ejs', {
     name: req.user ? req.user.getFullName() : 'John Doe',
