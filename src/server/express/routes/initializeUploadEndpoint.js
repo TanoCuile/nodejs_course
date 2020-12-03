@@ -3,7 +3,8 @@ const imagemin = require('imagemin');
 const imageminPNG = require('imagemin-pngquant');
 const imageminJPG = require('imagemin-jpegtran');
 const {multer} = require('./index');
-const {upload} = require('../../../services/file_storage');
+const storage = require('../../../services/file_storage');
+const {notifyAboutUpload} = require('../socket_server');
 
 function initializeUploadEndpoint(app) {
   app.post('/upload', multer.single('custom_image'), async (req, res) => {
@@ -39,6 +40,7 @@ function initializeUploadEndpoint(app) {
     // Also we need to move minified file into public folder
     // where it can be accesible from browser by `express.static`
     await moveFileToDestinationLocation(finalImagePath, fileName);
+    notifyAboutUpload({fileName});
 
     // We wat to redirect to home page(because we not have separated page)
     return res.redirect('/');
@@ -48,7 +50,7 @@ exports.initializeUploadEndpoint = initializeUploadEndpoint;
 
 async function moveFileToDestinationLocation(finalImagePath, fileName) {
   // Cloud functionality
-  await upload(finalImagePath, fileName);
+  await storage.upload(finalImagePath, fileName);
   fs.unlink(finalImagePath);
   // File system functionality
   // await fs.rename(

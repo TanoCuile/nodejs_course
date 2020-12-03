@@ -29,7 +29,6 @@ class FileStorage {
    * }} payload
    */
   constructor({bucket, storage}) {
-    console.log(bucket, storage);
     this.bucket = bucket;
     this.storage = storage;
   }

@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const {join} = require('path');
 const cors = require('cors');
 const ejs = require('ejs');
@@ -7,7 +8,8 @@ const {promisify} = require('util');
 const {setUpMiddlewares} = require('@middlewares');
 const {settUpRoutes} = require('@routes');
 const {initializeDataBase} = require('../../models');
-const {download} = require('../../services/file_storage');
+const {initializeSocketServer} = require('./socket_server');
+const storage = require('../../services/file_storage');
 // const { initializeDataBase } = require('../../entities');
 
 function addJSStatic(app) {
@@ -45,7 +47,7 @@ function setUpExpressApplication(app) {
     // We need to let browser know that response is image
     res.setHeader('Content-Type', 'image/png');
     // After headers we need to send file content
-    res.write(await download(fileName));
+    res.write(await storage.download(fileName));
     // Then finishing response,
     // like letting browser know that it can stor listening port
     res.end();
@@ -72,14 +74,17 @@ function setUpExpressApplication(app) {
 function runServer({host, port} = {}) {
   // Створюємо об*єкт express.Application для конфігурації нашого сервера
   const app = express();
+  // For socket.io we need instance of `http` server so:
+  const httpServer = http.createServer(app);
 
   return (
     initializeDataBase()
       .then(() => console.log('DB connected...'))
       .then(() => setUpExpressApplication(app))
       .then(() => console.log('App configured...'))
+      .then(() => initializeSocketServer(httpServer))
       // Запускаємо сконфігурований сервер
-      .then(() => promisify(app.listen.bind(app))(port, host))
+      .then(() => promisify(httpServer.listen.bind(httpServer))(port, host))
       .then(() => console.log('Listening...'))
       .then(() => app)
       .catch((e) => console.error(e))
